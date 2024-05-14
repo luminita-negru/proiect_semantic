@@ -56,12 +56,25 @@
 
             const data = await response.json();
             const table = document.getElementById('unifiedTable');
-            table.innerHTML = '<tr><th>Veterinarian ID</th><th>Name</th><th>Specialty</th><th>Pet Name</th><th>Pet Breed</th></tr>';
+            const dropdown = document.getElementById('veterinarianDropdown');
+            
+            table.innerHTML = '<tr><th>Name</th><th>Specialty</th><th>Pet Name</th><th>Pet Breed</th></tr>';
+            dropdown.innerHTML = '<option value="">Select Veterinarian</option>';
+
+            const uniqueVeterinarians = new Set();
 
             data.forEach(item => {
                 const row = document.createElement('tr');
-                row.innerHTML = `<td>${item.VeterinarianID}</td><td>${item.name}</td><td>${item.specialty}</td><td>${item.petName}</td><td>${item.petBreed}</td>`;
+                row.innerHTML = `<td>${item.name}</td><td>${item.specialty}</td><td>${item.petName || 'N/A'}</td><td>${item.petBreed || 'N/A'}</td>`;
                 table.appendChild(row);
+
+                if (!uniqueVeterinarians.has(item.VeterinarianID)) {
+                    uniqueVeterinarians.add(item.VeterinarianID);
+                    const option = document.createElement('option');
+                    option.value = item.VeterinarianID;
+                    option.textContent = item.name;
+                    dropdown.appendChild(option);
+                }
             });
         }
     </script>
@@ -70,7 +83,12 @@
     <h1>Unified Veterinarian and Pet Table</h1>
     <button onclick="fetchAndDisplayData()">Load Data</button>
     <table id="unifiedTable" border="1">
-        <!-- Table will behbhygbgvbhghgbhhbjnju populated here -->
+        <!-- Table will be populated here -->
     </table>
+    <br>
+    <label for="veterinarianDropdown">Select Veterinarian:</label>
+    <select id="veterinarianDropdown">
+        <!-- Dropdown options will be populated here -->
+    </select>
 </body>
 </html>
