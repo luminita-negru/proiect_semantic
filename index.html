@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Table</title>
+    <script type="application/ld+json" id="sectionjsonld">
+    {
+      "@context": "http://schema.org",
+      "@graph": [
+        {
+          "@id": "::vet1",
+          "@type": "VeterinarianOffice",
+          "veterinarian": [
+            {
+              "@type": "Person",
+              "VeterinarianID": 1,
+              "name": "Dr. Alexandra Biris",
+              "specialty": "Canine Health",
+              "pets": [
+                {"name": "Luna", "breed": "Beagle"},
+                {"name": "Poka", "breed": "Golden Retriever"}
+              ]
+            },
+            {
+              "@type": "Person",
+              "VeterinarianID": 2,
+              "name": "Dr. Catalina Ciuban",
+              "specialty": "Feline Health",
+              "pets": [
+                {"name": "Pufic", "breed": "British Shorthair"}
+              ]
+            },
+            {
+              "@type": "Person",
+              "VeterinarianID": 3,
+              "name": "Dr. Mihaela Cotul",
+              "specialty": "Avian Health",
+              "pets": []
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+    <script>
+        async function fetchAndDisplayData() {
+            const jsonLd = document.getElementById('sectionjsonld').innerText;
+            const response = await fetch('backend.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonLd
+            });
+
+            const data = await response.json();
+            const table = document.getElementById('unifiedTable');
+            table.innerHTML = '<tr><th>Veterinarian ID</th><th>Name</th><th>Specialty</th><th>Pet Name</th><th>Pet Breed</th></tr>';
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${item.VeterinarianID}</td><td>${item.name}</td><td>${item.specialty}</td><td>${item.petName}</td><td>${item.petBreed}</td>`;
+                table.appendChild(row);
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Unified Veterinarian and Pet Table</h1>
+    <button onclick="fetchAndDisplayData()">Load Data</button>
+    <table id="unifiedTable" border="1">
+        <!-- Table will be populated here -->
+    </table>
+</body>
+</html>
